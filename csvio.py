@@ -1,19 +1,29 @@
 import csv
-from random import choice, randint
+from pathlib import Path
 
 
 def read_csv(path):
-    # FIXME
-    return [('Model', ['A', ]), ('Wynik', [17, ]), ('Czas', [465, ])]
+    path_file = Path(path)
+    if not path_file.exists():
+        print("Path doesn't exist")
+        return
+
+    data = []
+    with open('plik.csv', 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            data.append(row)
+
+    return data
 
 def write_to_csv(path, columns):
-    # TODO: uzycie biblioteki csv albo path
-    # TODO 2: sprawdzic czy sciezka istnieje lub czy plik istnieje
-    plik = open(path + 'Dane.csv', 'w')
-    plik.write('Model; Wynik; Czas;\n')
-    model = choice(['A', 'B', 'C'])
-    wynik = randint(0, 1000)
-    czas = randint(0, 1000)
-    plik.write(model + '; ' + str(wynik) + '; ' + str(czas) + '\n')
-    plik.close()
+    path_file = Path(path)
+    if not path_file.exists():
+        print("Path doesn't exist")
+        return
+
+    with open(path + '/Data.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        for row in columns:
+            writer.writerow(row)
     return
