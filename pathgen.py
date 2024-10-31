@@ -1,4 +1,6 @@
 from pathlib import Path
+import random
+import csvio
 
 def generate_paths(months, weekdays, daytimes):
     paths = []
@@ -8,11 +10,11 @@ def generate_paths(months, weekdays, daytimes):
             start_day, end_day = days
             for time in daytimes:
                 if start_day == end_day:
-                    path = Path(f"{month}/{day}/{time}")
+                    path = Path(f"{month}/{start_day}/{time}")
                     paths.append(path)
                 else:
-                    paths.append(Path(f'{month}/{start_day}/{time_of_day}'))
-                    paths.append(Path(f'{month}/{end_day}/{time_of_day}'))
+                    paths.append(Path(f'{month}/{start_day}/{time}'))
+                    paths.append(Path(f'{month}/{end_day}/{time}'))
 
     return paths
 
@@ -23,7 +25,7 @@ def calculate_total_time(paths):
     for path in paths:
         try:
             data = csvio.read_csv(path);
-            if (data[0][1] == 'A')
+            if (data[0][1] == 'A'):
                 time += data[2][1];
 
         except FileNotFoundError:
