@@ -2,12 +2,13 @@ import csv
 from pathlib import Path
 
 def read_csv(path):
-    if not path.exists():
+    path_file = Path(path / 'Data.csv')
+    if not path_file.exists():
         print("Path doesn't exist")
         return
 
     data = []
-    with open(path / 'Data.csv', 'r') as file:
+    with open(path_file, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             data.append(row)
