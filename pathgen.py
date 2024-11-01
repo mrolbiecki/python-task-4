@@ -25,7 +25,7 @@ def calculate_total_time(paths):
     for path in paths:
         try:
             data = csvio.read_csv(path);
-            if (data[0][1] == 'A'):
+            if data[0][1] == 'A':
                 time += data[2][1];
 
         except FileNotFoundError:
@@ -53,6 +53,6 @@ def create_random_files(paths):
         path.mkdir(parents=True, exist_ok=True)
 
         data_row = generate_random_data()
-        csvio.write_to_csv(path, data_row)
+        csvio.write_to_csv(path, [["Model", "Result", "Time"], data_row])
     
     print('Files have been created successfully.')
