@@ -13,14 +13,18 @@ def get_days_in_range(day_range):
 
 def generate_paths(months, weekdays, daytimes):
     paths = []
+    counter = 0
 
     for month in months:
         days = get_days_in_range(weekdays[months.index(month)])
-        
+
         for day in days:
-            for time in daytimes:
-                path = Path(f"{month}/{day}/{time}")
-                paths.append(path)
+            if len(daytimes) > counter:
+                path = Path(f"{month}/{day}/{daytimes[counter]}")
+            else:
+                path = Path(f"{month}/{day}/{"mor"}")
+
+            paths.append(path)
 
     return paths
 
