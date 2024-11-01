@@ -4,17 +4,17 @@ import csvio
 
 def generate_paths(months, weekdays, daytimes):
     paths = []
-
+    
     for month in months:
-        for days in weekdays:
-            start_day, end_day = days
-            for time in daytimes:
-                if start_day == end_day:
-                    path = Path(f"{month}/{start_day}/{time}")
-                    paths.append(path)
-                else:
-                    paths.append(Path(f'{month}/{start_day}/{time}'))
-                    paths.append(Path(f'{month}/{end_day}/{time}'))
+        start_day, end_day = weekdays[months.index(month)]
+        
+        for time in daytimes:
+            if start_day == end_day:
+                path = Path(f"{month}/{start_day}/{time}")
+                paths.append(path)
+            else:
+                paths.append(Path(f'{month}/{start_day}/{time}'))
+                paths.append(Path(f'{month}/{end_day}/{time}'))
 
     return paths
 
