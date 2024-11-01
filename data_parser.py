@@ -1,52 +1,68 @@
+from pathlib import Path
+import random
 import csvio
-import pathgen
-import argparse
 
-MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 DAYS_OF_WEEK = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-TIMES_OF_DAY = ['mor', 'evn']
 
-def validate_day_range(day_range):
-    days = day_range.split('-')
+def get_days_in_range(day_range):
+    start_day, end_day = day_range
+    start_index = DAYS_OF_WEEK.index(start_day)
+    end_index = DAYS_OF_WEEK.index(end_day)
 
-    if len(days) > 2:
-        raise argparse.ArgumentTypeError(f"Invalid day range: {day_range}. Too many days specified.")
+    return DAYS_OF_WEEK[start_index:end_index + 1]
 
-    for day in days:
-        if day not in DAYS_OF_WEEK:
-            raise argparse.ArgumentTypeError(
-                f"Invalid day abbreviation: {day}. Allowed values are {', '.join(DAYS_OF_WEEK)}.")
+def generate_paths(months, weekdays, daytimes):
+    paths = []
+    counter = 0
 
-    return day_range
+    for month in months:
+        days = get_days_in_range(weekdays[months.index(month)])
 
-def parse_day_ranges(day_ranges):
-    result = []
-    for day_range in day_ranges:
-        days = day_range.split('-')
-        if len(days) == 2:
-            result.append((days[0], days[1]))
-        else:
-            result.append((days[0], days[0]))
-    return result
+        for day in days:
+            if len(daytimes) > counter:
+                path = Path(f"{month}/{day}/{daytimes[counter]}")
+            else:
+                path = Path(f"{month}/{day}/{"mor"}")
 
-parser = argparse.ArgumentParser()
+            paths.append(path)
 
-parser.add_argument('-m', '--months', nargs='+', choices=MONTHS, required=True,
-                    help="Select months (multiple allowed).")
-parser.add_argument('-d', '--days', nargs='+', type=validate_day_range, required=True,
-                    help="Select ranges of days (e.g., 'mon-tue', 'fri').")
-parser.add_argument('-t', '--times', nargs='*', choices=TIMES_OF_DAY, default=['mor'],
-                    help="Select time of day (mor/evn). Default is 'mor'.")
-parser.add_argument('-o', '--operation', choices=['create', 'read'], default='read',
-                    help="Choose operation mode: create or read files.")
+    return paths
 
-args = parser.parse_args()
+def calculate_total_time(paths):
+    print('Calculating total time...')
+    time = 0
 
-parsed_days = parse_day_ranges(args.days)
+    for path in paths:
+        try:
+            data = csvio.read_csv(path);
 
-paths = pathgen.generate_paths(args.months, parsed_days, args.times)
+            if data[0][1] == 'A':
+                time += data[2][1];
 
-if args.operation == 'create':
-    pathgen.create_random_files(paths)
-elif args.operation == 'read':
-    pathgen.calculate_total_time(paths)
+        except FileNotFoundError:
+            print(f"File not found: {path}")
+        except KeyError as e:
+            print(f"Missing column in file {path}: {e}")
+        except ValueError as e:
+            print(f"Invalid data in file {path}: {e}")
+
+    print(f"Total time: {time}.")
+
+def generate_random_data():
+    model = random.choice(['A', 'B', 'C'])
+    result = random.randint(0, 1000)
+    time = random.randint(0, 1000)
+
+    return [model, result, f"{time}s"]
+
+def create_random_files(paths):
+    print('Creating random files...')
+
+    for path in paths:
+        path.mkdir(parents=True, exist_ok=True)
+
+        data_row = generate_random_data()
+        print(data_row)
+        csvio.write_to_csv(path, [["Model", "Result", "Time"], data_row])
+
+    print('Files have been created successfully.')
