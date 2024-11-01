@@ -24,9 +24,9 @@ def calculate_total_time(paths):
 
     for path in paths:
         try:
-            data = csvio.read_csv(path);
-            if (data[0][1] == 'A'):
-                time += data[2][1];
+            data = csvio.read_csv(path)
+            if data[0][1] == 'A':
+                time += data[2][1]
 
         except FileNotFoundError:
             print(f"File not found: {path}")
