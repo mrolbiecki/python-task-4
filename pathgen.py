@@ -21,7 +21,7 @@ def generate_paths(months, weekdays, daytimes):
         for day in days:
             if len(daytimes) > counter:
                 path = Path(f"{month}/{day}/{daytimes[counter]}")
-                counter++
+                counter + 1
             else:
                 path = Path(f"{month}/{day}/{"mor"}")
 
