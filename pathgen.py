@@ -21,7 +21,7 @@ def generate_paths(months, weekdays, daytimes):
         for day in days:
             if len(daytimes) > counter:
                 path = Path(f"{month}/{day}/{daytimes[counter]}")
-                counter + 1
+                counter = counter + 1
             else:
                 path = Path(f"{month}/{day}/{"mor"}")
 
@@ -37,8 +37,8 @@ def calculate_total_time(paths):
         try:
             data = csvio.read_csv(path);
 
-            if data[0][1] == 'A':
-                time += data[2][1];
+            if data[1][0] == 'A':
+                time += int((data[1][2]).rstrip("s"));
 
         except FileNotFoundError:
             print(f"File not found: {path}")
@@ -63,7 +63,6 @@ def create_random_files(paths):
         path.mkdir(parents=True, exist_ok=True)
 
         data_row = generate_random_data()
-        print(data_row)
         csvio.write_to_csv(path, [["Model", "Result", "Time"], data_row])
 
     print('Files have been created successfully.')
