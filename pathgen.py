@@ -34,18 +34,10 @@ def calculate_total_time(paths):
     time = 0
 
     for path in paths:
-        try:
-            data = csvio.read_csv(path);
+        data = csvio.read_csv(path)
 
-            if data[1][0] == 'A':
-                time += int((data[1][2]).rstrip("s"));
-
-        except FileNotFoundError:
-            print(f"File not found: {path}")
-        except KeyError as e:
-            print(f"Missing column in file {path}: {e}")
-        except ValueError as e:
-            print(f"Invalid data in file {path}: {e}")
+        if data[1][0] == 'A':
+            time += int((data[1][2]).rstrip("s"))
 
     print(f"Total time: {time}.")
 

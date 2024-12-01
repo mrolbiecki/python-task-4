@@ -1,4 +1,3 @@
-import csvio
 import pathgen
 import argparse
 
